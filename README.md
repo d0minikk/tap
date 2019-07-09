@@ -15,7 +15,7 @@ API.
 You don't need this source code unless you want to modify the gem. If you just
 want to use the package, just run:
 
-    gem install tap
+    gem install tap-ruby
 
 If you want to build the gem from source:
 
@@ -35,5 +35,5 @@ compromised in transit and alter the code of gems fetched securely over https:
 source 'https://rubygems.org'
 
 gem 'rails'
-gem 'tap'
+gem 'tap-ruby'
 ```
