@@ -1,0 +1,15 @@
+#!/usr/bin/env ruby
+
+# frozen_string_literal: true
+
+require 'irb'
+require 'irb/completion'
+
+require "#{::File.dirname(__FILE__)}/../lib/tap"
+
+IRB.conf[:PROMPT_MODE] = :SIMPLE
+IRB.conf[:AUTO_INDENT] = true
+
+puts 'Loaded gem tap-ruby'
+
+IRB.start
