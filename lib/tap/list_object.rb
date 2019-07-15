@@ -11,6 +11,8 @@ module Tap
 
     attr_accessor :filters
 
+    delegate :each, :empty?, to: :data
+
     def self.empty_list(opts = {})
       ListObject.construct_from({ data: [] }, opts)
     end
@@ -33,16 +35,6 @@ module Tap
       end
     end
 
-    def each(&blk)
-      data.each(&blk)
-    end
-
-    # Iterates through each resource in all pages, making additional fetches to
-    # the API as necessary.
-    #
-    # Note that this method will make as many API calls as necessary to fetch
-    # all resources. For more granular control, please see +each+ and
-    # +next_page+.
     def auto_paging_each(&blk)
       return enum_for(:auto_paging_each) unless block_given?
 
@@ -52,10 +44,6 @@ module Tap
         page = page.next_page
         break if page.empty?
       end
-    end
-
-    def empty?
-      data.empty?
     end
 
     def retrieve(id, opts = {})
