@@ -187,7 +187,6 @@ module Tap
                 "We interpret empty strings as nil in requests. " \
                 "You may set (object).#{k} = nil to delete the property."
             end
-            binding.pry
             @values[k] = Util.convert_to_tap_object(v, @opts)
             dirty_value!(@values[k])
             @unsaved_values.add(k)
@@ -269,7 +268,6 @@ module Tap
         update = value.map { |v| serialize_params_value(v, nil, true, force) }
         update if update != serialize_params_value(original, nil, true, force)
       elsif value.is_a?(Hash)
-        binding.pry
         Util.convert_to_tap_object(value, @opts).serialize_params
 
       elsif value.is_a?(TapObject)
