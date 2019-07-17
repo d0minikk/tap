@@ -3,7 +3,7 @@
 module Tap
   class Refund < APIResource
     extend Tap::APIOperations::Create
-    extend Tap::APIOperations::List
+    extend Tap::APIOperations::PostList
     include Tap::APIOperations::Save
 
     OBJECT_NAME = 'refund'.freeze
