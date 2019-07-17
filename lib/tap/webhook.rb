@@ -3,10 +3,10 @@
 module Tap
   module Webhook
     def self.construct_resource(payload, sig_header, secret)
-      Signature.verify_header(payload, sig_header, secret)
-
       data = JSON.parse(payload, symbolize_names: true)
-      Tap::TapObject.initialize_from(data, opts)
+      resource = Tap::Util.convert_to_tap_object(data)
+
+      Signature.verify_header(payload, resource, sig_header, secret)
     end
 
     module Signature
