@@ -10,12 +10,12 @@ module Tap
     end
 
     module Signature
-      def self.verify_header(payload, signature_header, secret)
+      def self.verify_header(payload, resource, signature_header, secret)
         if signature_header.empty?
           raise SignatureVerificationError.new('No signatures found', signature_header, http_body: payload)
         end
 
-        payload_string = Signature.retrive_payload_string(payload)
+        payload_string = Signature.retrive_hashstring(resource)
         expected_sig = compute_signature(payload_string, secret)
 
         unless Util.secure_compare(expected_sig, s)
@@ -34,14 +34,23 @@ module Tap
       end
       private_class_method :compute_signature
 
-      def self.retrive_payload_string(payload)
-        attributes = payload[:charge] || payload[:authorize]
+      def self.retrive_hashstring(resource)
+        hashstring = {
+          id: resource.id,
+          amount: resource.amount,
+          currency: resource.currency,
+          gateway_reference: resource.reference.gateway,
+          payment_reference: resource.reference.payment,
+          status: resource.status,
+          created: resource.transaction.created,
+        }
 
-        [:id, :amount, :currency, :gateway_reference, :payment_reference, :status, :created].map do |attribute|
-          "x_#{attributes[attribute]}"
+        hashstring.map do |k, v|
+          "x_#{k}#{v}"
         end.join('')
       end
-      private_class_method :retrive_payload_string
+
+      private_class_method :retrive_hashstring
     end
   end
 end
