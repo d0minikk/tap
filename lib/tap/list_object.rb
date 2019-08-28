@@ -11,8 +11,6 @@ module Tap
 
     attr_accessor :filters
 
-    delegate :each, :empty?, to: :data
-
     def self.empty_list(opts = {})
       ListObject.construct_from({ data: [] }, opts)
     end
@@ -35,6 +33,14 @@ module Tap
       end
     end
 
+    def empty?
+      data.empty?
+    end
+
+    def each(&blk)
+      data.each(&blk)
+    end
+
     def auto_paging_each(&blk)
       return enum_for(:auto_paging_each) unless block_given?
 
@@ -54,6 +60,7 @@ module Tap
 
     def next_page(params = {}, opts = {})
       return self.class.empty_list(opts) unless has_more
+
       last_id = data.last.id
 
       params = filters.merge(starting_after: last_id).merge(params)
@@ -62,11 +69,7 @@ module Tap
     end
 
     def previous_page(params = {}, opts = {})
-      first_id = data.first.id
-
-      params = filters.merge(ending_before: first_id).merge(params)
-
-      list(params, opts)
+      # TODO: Not implemented on the TAP API
     end
 
     def resource_url
